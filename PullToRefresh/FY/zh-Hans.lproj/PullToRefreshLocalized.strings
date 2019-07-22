@@ -1,0 +1,15 @@
+/* 
+  PullToRefreshLocalized.strings
+  PullToRefreshDemo
+
+  Created by kun wang on 2019/07/22.
+  Copyright © 2019 Yalantis. All rights reserved.
+*/
+
+"kInitialStateTitle" = "下拉加载...";
+"kFinishedStateTitle" = "完成...";
+"kLoadingStateTitle" = "正在加载...";
+"kReleasingStateTitle" = "松开加载...";
+"kDefaultSubTitleNever" = "上次更新: 没有";
+"kDefaultSubTitle" = "上次更新: ";
+

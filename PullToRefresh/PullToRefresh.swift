@@ -8,7 +8,7 @@
 
 import UIKit
 
-public enum Position {
+enum Position {
     
     case top, bottom
     
@@ -23,16 +23,21 @@ public enum Position {
     
 }
 
-open class PullToRefresh: NSObject {
+class PullToRefresh: NSObject {
     
-    open var position: Position = .top
+    var position: Position = .top
     
-    open var animationDuration: TimeInterval = 1
-    open var hideDelay: TimeInterval = 0
-    open var springDamping: CGFloat = 0.4
-    open var initialSpringVelocity: CGFloat = 0.8
-    open var animationOptions: UIViewAnimationOptions = [.curveLinear]
-    open var shouldBeVisibleWhileScrolling: Bool = false
+    var animationDuration: TimeInterval = 1
+    var hideDelay: TimeInterval = 0
+    var springDamping: CGFloat = 0.4
+    var initialSpringVelocity: CGFloat = 0.8
+    #if swift(>=4.2)
+    var animationOptions: UIView.AnimationOptions = [.curveLinear]
+    #else
+    var animationOptions: UIViewAnimationOptions = [.curveLinear]
+    #endif
+    var shouldBeVisibleWhileScrolling: Bool = false
+    var topPadding : CGFloat? = nil
     
     let refreshView: UIView
     var isEnabled: Bool = false {
@@ -69,7 +74,7 @@ open class PullToRefresh: NSObject {
     
     // MARK: - State
     
-    open fileprivate(set) var state: State = .initial {
+    fileprivate(set) var state: State = .initial {
         willSet{
             switch newValue {
             case .finished:
@@ -94,6 +99,7 @@ open class PullToRefresh: NSObject {
                     scrollView?.contentInset = self.scrollViewDefaultInsets
                     state = .initial
                 }
+
             case .releasing(progress: let value) where value < 0.1:
                 state = .initial
             
@@ -110,15 +116,7 @@ open class PullToRefresh: NSObject {
         self.animator = animator
         self.position = position
     }
-    
-    public convenience init(height: CGFloat = 40, position: Position = .top) {
-        let refreshView = DefaultRefreshView()
-        refreshView.translatesAutoresizingMaskIntoConstraints = false
-        refreshView.autoresizingMask = [.flexibleWidth]
-        refreshView.frame.size.height = height
-        self.init(refreshView: refreshView, animator: DefaultViewAnimator(refreshView: refreshView), height: height, position: position)
-    }
-    
+
     deinit {
         scrollView?.removePullToRefresh(at: position)
         removeScrollViewObserving()
@@ -140,7 +138,7 @@ extension PullToRefresh {
         
     }
     
-    override open func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         if (context == &KVO.context && keyPath == KVO.ScrollViewPath.contentOffset && object as? UIScrollView == scrollView) {
             var offset: CGFloat
             switch position {
@@ -339,7 +337,11 @@ private extension PullToRefresh {
         guard let scrollView = scrollView else { return }
         scrollView.addSubview(refreshView)
         refreshView.frame = scrollView.defaultFrame(forPullToRefresh: self)
+        #if swift(>=4.2)
+        scrollView.sendSubviewToBack(refreshView)
+        #else
         scrollView.sendSubview(toBack: refreshView)
+        #endif
     }
     
 }

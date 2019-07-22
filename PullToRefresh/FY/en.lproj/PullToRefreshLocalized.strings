@@ -1,0 +1,14 @@
+/* 
+  PullToRefreshLocalized.strings
+  PullToRefreshDemo
+
+  Created by kun wang on 2019/07/22.
+  Copyright © 2019 Yalantis. All rights reserved.
+*/
+
+"kInitialStateTitle" = "Pull to refresh...";
+"kFinishedStateTitle" = "Fininshed...";
+"kLoadingStateTitle" = "Loading...";
+"kReleasingStateTitle" = "Release to load...";
+"kDefaultSubTitleNever" = "Last update: Never";
+"kDefaultSubTitle" = "Last update: ";

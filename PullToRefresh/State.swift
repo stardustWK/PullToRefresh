@@ -7,9 +7,9 @@
 //
 
 import Foundation
+import UIKit
 
 public enum State: Equatable, CustomStringConvertible {
-    
     case initial
     case releasing(progress: CGFloat)
     case loading

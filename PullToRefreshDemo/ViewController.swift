@@ -20,6 +20,10 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         
         setupPullToRefresh()
+        tableView.setPullToRefreshTitle(subTitle: "进港11哥", state: .initial)
+        tableView.setPullToRefreshTitle(subTitle: "进港11哥1121", state: .loading)
+        tableView.setPullToRefreshTitle(subTitle: "进港11哥212", state: .releasing)
+        tableView.setPullToRefreshTitle(subTitle: "进港11哥2dadadad1", state: .finished)
     }
     
     deinit {
@@ -27,27 +31,28 @@ class ViewController: UIViewController {
     }
     
     @IBAction fileprivate func startRefreshing() {
-        tableView.startRefreshing(at: .top)
+        tableView.startTopRefreshing()
     }
 }
 
 private extension ViewController {
     
     func setupPullToRefresh() {
-        tableView.addPullToRefresh(PullToRefresh()) { [weak self] in
+        
+        tableView.addPullToRefresh { [weak self] in
             let delayTime = DispatchTime.now() + Double(Int64(2 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
             DispatchQueue.main.asyncAfter(deadline: delayTime) {
                 self?.dataSourceCount = PageSize
-                self?.tableView.endRefreshing(at: .top)
+                self?.tableView.endTopRefreshing()
             }
         }
-        
-        tableView.addPullToRefresh(PullToRefresh(position: .bottom)) { [weak self] in
+
+        tableView.addInfiniteScrolling { [weak self] in
             let delayTime = DispatchTime.now() + Double(Int64(2 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
             DispatchQueue.main.asyncAfter(deadline: delayTime) {
                 self?.dataSourceCount += PageSize
                 self?.tableView.reloadData()
-                self?.tableView.endRefreshing(at: .bottom)
+                self?.tableView.endBottomRefreshing()
             }
         }
     }
